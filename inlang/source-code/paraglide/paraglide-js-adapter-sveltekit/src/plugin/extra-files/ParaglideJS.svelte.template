@@ -1,0 +1,33 @@
+<script>
+    import { setLanguageTag } from "./runtime.js"
+    import { getLanguageFromPath, resolveRoute } from "./routing.js"
+    import { setContext } from "svelte"
+    import { get } from "svelte/store"
+    import { page } from "$app/stores"
+
+    /**
+     * Override the automatically detected language tag.
+     * @type {import("./runtime.js").AvailableLanguageTag | undefined}
+     */
+    export let languageTag = undefined;
+
+    $: detectedLanguage = getLanguageFromPath($page.url.pathname)
+    $: lang = languageTag ?? detectedLanguage;
+    $: setLanguageTag(lang)
+
+    /**
+     * @param {string} href
+     * @param {import("./runtime.js").AvailableLanguageTag | undefined} hreflang
+     */
+    function translateHref(href, hreflang) {
+        hreflang = hreflang ?? lang;
+        const fullPath = new URL(href, get(page).url).pathname;
+        return resolveRoute(fullPath, hreflang)
+    }
+
+    setContext("$paraglide-adapter-sveltekit:context", { translateHref })
+</script>
+
+{#key lang}
+    <slot />
+{/key}

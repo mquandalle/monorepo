@@ -1,9 +1,9 @@
 import { base } from "$app/paths"
-import { i18n } from "$lib/i18n"
 import { redirect } from "@sveltejs/kit"
+import { resolveRoute } from "$paraglide/routing.js"
 
 export const prerender = true
 
 export function GET() {
-	redirect(303, i18n.resolveRoute(base + "/about", "fr"))
+	redirect(303, resolveRoute(base + "/about", "fr"))
 }

@@ -1,3 +1,3 @@
-import { i18n } from "$lib/i18n"
+import * as hooks from "$paraglide/hooks"
 
-export const handle = i18n.handle({ langPlaceholder: "%lang%" })
+export const handle = hooks.handle({ languagePlaceholder: "%lang%" })

@@ -1,0 +1,41 @@
+import { sourceLanguageTag, isAvailableLanguageTag } from "./runtime.js"
+
+/**
+ * @param {string} canonicalPath - The untranslated path without base or language prefix
+ * @param {import("./runtime.js").AvailableLanguageTag} language - The language you want to resolve the path for
+ */
+export function resolveRoute(canonicalPath, language) {
+	if (language === sourceLanguageTag) {
+		return normalize(canonicalPath)
+	}
+	return normalize(language) + normalize(canonicalPath);
+}
+
+/**
+ * @param {string} path
+ * @returns {import("./runtime.js").AvailableLanguageTag}
+ */
+export function getLanguageFromPath(path) {
+	const maybeLanguage = path.split("/").filter(Boolean).at(0)
+	if (isAvailableLanguageTag(maybeLanguage)) {
+		return maybeLanguage
+	}
+	return sourceLanguageTag
+}
+
+/**
+ * @param {string} translatedPath
+ * @param {import("./runtime.js").AvailableLanguageTag} lang The langauge the translated path is in
+ */
+export function getCanonicalPath(translatedPath, lang) {
+	if (lang === sourceLanguageTag) return translatedPath
+	return translatedPath.replace(`/${lang}/`, "/")
+}
+ 
+/**
+ * Always starts with a slash and never ends with a slash.
+ * @param {string} path
+ */
+export function normalize(path) {
+	return "/" + path.split("/").filter(Boolean).join("/")
+}

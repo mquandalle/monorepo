@@ -1,11 +1,10 @@
 <script>
-	import { ParaglideJS } from "@inlang/paraglide-js-adapter-sveltekit"
 	import { base } from "$app/paths"
 	import * as m from "$paraglide/messages.js"
-	import { i18n } from "$lib/i18n"
+	import ParaglideJs from "$paraglide/ParaglideJS.svelte"
 </script>
-<h1>Not Translated</h1>
 
-<ParaglideJS {i18n} languageTag="en">
+<ParaglideJs languageTag="en">
+	<h1>Not Translated</h1>
 	<a href="{base}/">{m.home()}</a>
-</ParaglideJS>
+</ParaglideJs>

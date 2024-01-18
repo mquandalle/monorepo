@@ -20,7 +20,7 @@ const ignoreDirectory = `# ignore everything because the directory is auto-gener
 export const compile = (args: {
 	messages: Readonly<Message[]>
 	settings: ProjectSettings
-	extendRuntime?: (availableLanguageTags: string[]) => string
+	extraFiles?: Record<string, string>
 }): Record<string, string> => {
 	const compiledMessages = args.messages.map((message) =>
 		compileMessage(message, args.settings.languageTags, args.settings.sourceLanguageTag)
@@ -72,8 +72,7 @@ ${Object.keys(resources)
 
 ${compiledMessages.map((message) => message.index).join("\n\n")}
 `,
-		"runtime.js":
-			`
+		"runtime.js": `
 /* eslint-disable */
 /** @type {((tag: AvailableLanguageTag) => void) | undefined} */ 
 let _onSetLanguageTag
@@ -98,8 +97,8 @@ export const sourceLanguageTag = "${args.settings.sourceLanguageTag}"
  *   }
  */
 export const availableLanguageTags = /** @type {const} */ (${JSON.stringify(
-				args.settings.languageTags
-			)})
+			args.settings.languageTags
+		)})
 
 /**
  * Get the current language tag.
@@ -217,6 +216,7 @@ export function isAvailableLanguageTag(thing) {
  * 
  * @typedef {typeof availableLanguageTags[number]} AvailableLanguageTag
  */
-` + (args.extendRuntime ? "\n" + args.extendRuntime(args.settings.languageTags) : ""),
+`,
+		...(args.extraFiles || {}),
 	}
 }

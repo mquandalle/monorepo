@@ -12,6 +12,12 @@ export type UserConfig = {
 	project: string
 	outdir: string
 	silent?: boolean
+
+	/**
+	 * Any extra files to be written to the output directory.
+	 * This is usually only used by Inlang's own adapters.
+	 */
+	extraFiles?: Record<string, string>
 }
 
 export const paraglide = createUnplugin((config: UserConfig) => {
@@ -39,7 +45,7 @@ export const paraglide = createUnplugin((config: UserConfig) => {
 		}
 
 		logMessageChange()
-		const output = compile({ messages, settings })
+		const output = compile({ messages, settings, extraFiles: options.extraFiles })
 		await writeOutput(outputDirectory, output, fs)
 		numCompiles++
 		previousMessagesHash = currentMessagesHash

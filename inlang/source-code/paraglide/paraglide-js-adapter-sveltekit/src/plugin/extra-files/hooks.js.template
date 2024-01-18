@@ -1,0 +1,44 @@
+import { sourceLanguageTag, availableLanguageTags } from "./runtime.js"
+import { getLanguageFromPath } from "./routing.js"
+
+/**
+ * @param {{ languagePlaceholder : string }} options
+ * @returns {import("@sveltejs/kit").Handle}
+ */
+export function handle(options) {
+	return ({ event, resolve }) => {
+		const language = getLanguageFromPath(event.url.pathname)
+		return resolve(event, {
+			transformPageChunk: ({ html, done }) => {
+				if (!done) return html
+				return html.replace(options.languagePlaceholder, language)
+			},
+		})
+	}
+}
+
+
+
+// The known data-suffixes in decreasing specificity
+const SUFFIXES = [".html__data.json", "__data.json"]
+
+/**
+ * @returns {import("@sveltejs/kit").Reroute}
+ */
+export function reroute() {
+	return ({ url }) => {
+		let suffix = "";
+		for(const knownSuffix of SUFFIXES) {
+			if(url.pathname.endsWith(knownSuffix)) {
+				suffix = knownSuffix; 
+				break;
+			}
+		}
+
+		url.pathname = url.pathname.slice(0, url.pathname.length - suffix.length);
+
+		const language = getLanguageFromPath(url.pathname)
+		const canonicalPath = url.pathname.replace(`/${language}`, "") || "/"
+		return canonicalPath + suffix;
+	}
+}
