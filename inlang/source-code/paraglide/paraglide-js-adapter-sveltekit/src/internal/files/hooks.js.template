@@ -1,5 +1,7 @@
 import { sourceLanguageTag, availableLanguageTags } from "./runtime.js"
 import { getLanguageFromPath } from "./routing.js"
+import { base } from "./routing.js"
+
 
 /**
  * @param {{ languagePlaceholder : string }} options
@@ -38,7 +40,7 @@ export function reroute() {
 		url.pathname = url.pathname.slice(0, url.pathname.length - suffix.length);
 
 		const language = getLanguageFromPath(url.pathname)
-		const canonicalPath = url.pathname.replace(`/${language}`, "") || "/"
+		const canonicalPath = url.pathname.slice().replace(`/${language}`, "") || "/"
 		return canonicalPath + suffix;
 	}
 }

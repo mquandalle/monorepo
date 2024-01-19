@@ -1,14 +1,23 @@
 import { sourceLanguageTag, isAvailableLanguageTag } from "./runtime.js"
+import { base as _base } from "$app/paths"
+import { page } from "$app/stores"
+import { get } from "svelte/store"
+
+/**
+ * The `base` path from `$app/paths`, but always absolute
+ */
+export const base = getAbsoluteBase(_base)
 
 /**
  * @param {string} canonicalPath - The untranslated path without base or language prefix
  * @param {import("./runtime.js").AvailableLanguageTag} language - The language you want to resolve the path for
  */
 export function resolveRoute(canonicalPath, language) {
+	canonicalPath = canonicalPath.slice(base.length)
 	if (language === sourceLanguageTag) {
-		return normalize(canonicalPath)
+		return base + normalize(canonicalPath)
 	}
-	return normalize(language) + normalize(canonicalPath);
+	return base + normalize(language) + normalize(canonicalPath);
 }
 
 /**
@@ -16,6 +25,9 @@ export function resolveRoute(canonicalPath, language) {
  * @returns {import("./runtime.js").AvailableLanguageTag}
  */
 export function getLanguageFromPath(path) {
+
+	path = path.slice(base.length)
+
 	const maybeLanguage = path.split("/").filter(Boolean).at(0)
 	if (isAvailableLanguageTag(maybeLanguage)) {
 		return maybeLanguage
@@ -38,4 +50,21 @@ export function getCanonicalPath(translatedPath, lang) {
  */
 export function normalize(path) {
 	return "/" + path.split("/").filter(Boolean).join("/")
+}
+
+/**
+ * @param {string} maybeRelativeBase
+ */
+function getAbsoluteBase(maybeRelativeBase) {
+	if (maybeRelativeBase == "") return maybeRelativeBase
+
+	//The base may be a relative path during SSR component initialization.
+	//If that's the case, we need to make it absolute.
+	if (!maybeRelativeBase.startsWith("/")) {
+		const absoluteBase = new URL(maybeRelativeBase, get(page).url).pathname
+
+		if(absoluteBase == "/") return ""
+		return absoluteBase
+	}
+	return maybeRelativeBase
 }
