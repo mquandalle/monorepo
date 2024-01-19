@@ -279,6 +279,25 @@ describe("e2e", async () => {
 	})
 })
 
+describe("extraFiles", () => {
+	test("it includes extra files in the output", async () => {
+		const output = compile({
+			messages: [],
+			settings: {
+				sourceLanguageTag: "en",
+				languageTags: ["en"],
+				modules: [],
+			},
+			extraFiles: {
+				"extra.js": `export const a = 5`,
+			},
+		})
+
+		expect(output).toHaveProperty("extra.js")
+		expect(output["extra.js"]).toContain("export const a = 5")
+	})
+})
+
 describe("tree-shaking", () => {
 	// removing comments makes the output more predictable and testable
 	const removeComments = () =>
