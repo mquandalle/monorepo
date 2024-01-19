@@ -73,6 +73,14 @@
 		"typescript": "5.2.2",
 		"vitest": "0.34.3"
 	},
+	"peerDependencies": {
+		"@inlang/paraglide-js-adapter-sveltekit": "workspace:*"
+	},
+	"peerDependenciesMeta": {
+		"@inlang/paraglide-js-adapter-sveltekit": {
+			"optional": true
+		}
+	},
 	"exports": {
 		"./internal": {
 			"import": "./dist/index.js",

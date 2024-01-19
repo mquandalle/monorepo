@@ -1,14 +1,14 @@
 import { PARAGLIDE_CONTEXT_KEY } from "../../../runtime/constants.js"
-import type { PreprocessingPass } from "../index.js"
 import { getElementsFromAst } from "../utils/ast.js"
 import { attrubuteValuesToJSValue } from "../utils/attributes-to-values.js"
 import { identifier } from "../utils/identifier.js"
+import type { PreprocessingPass } from "../index.js"
 import dedent from "dedent"
 
 export function createTranslateAttributePass(
 	element_name: string,
 	attribute_name: string,
-	lang_attribute_name?: string,
+	lang_attribute_name?: string
 ): PreprocessingPass {
 	return {
 		condition: ({ content }) => {
@@ -29,7 +29,7 @@ export function createTranslateAttributePass(
 				if (!attribute) continue
 
 				const optOutAttribute = link.attributes.find(
-					(attribute) => attribute.name === "data-no-translate",
+					(attribute) => attribute.name === "data-no-translate"
 				)
 				if (optOutAttribute) continue
 
@@ -46,16 +46,14 @@ export function createTranslateAttributePass(
 
 				//Replace the href attribute with the new href attribute
 				const newAttributeString = `${attribute_name}={${i(
-					"translateHref",
+					"translateHref"
 				)}(${attributeAsTemplateString}, ${langAttributeValue})}`
 				code.overwrite(attribute.start, attribute.end, newAttributeString)
 
 				rewroteAttribute = true
 			}
 
-			if (!rewroteAttribute) {
-				return {}
-			}
+			if (!rewroteAttribute) return {}
 
 			return {
 				scriptAdditions: {

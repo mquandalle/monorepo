@@ -2,7 +2,7 @@ import type { paraglide as vitePluginParaglide } from "@inlang/paraglide-js-adap
 
 type VitePluginUserConfig = Parameters<typeof vitePluginParaglide>[0]
 
-export interface UserConfig extends VitePluginUserConfig {
+export interface UserConfig extends Omit<VitePluginUserConfig, "adapter"> {
 	/**
 	 * The preprocessor rewrites any links in your markup
 	 * and translates them according to the routing strategy.

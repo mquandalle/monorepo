@@ -1072,6 +1072,9 @@ importers:
       '@inlang/language-tag':
         specifier: workspace:*
         version: link:../../versioned-interfaces/language-tag
+      '@inlang/paraglide-js-adapter-sveltekit':
+        specifier: workspace:*
+        version: link:../paraglide-js-adapter-sveltekit
       commander:
         specifier: 11.1.0
         version: 11.1.0
@@ -2032,11 +2035,11 @@ importers:
     dependencies:
       '@inlang/sdk':
         specifier: ^0.24.0
-        version: link:../../sdk
+        version: 0.24.1
     devDependencies:
       '@inlang/cli':
         specifier: ^2.5.0
-        version: link:../../cli
+        version: 2.6.0
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -6166,6 +6169,124 @@ packages:
     dev: false
     optional: true
 
+  /@inlang/cli@2.6.0:
+    resolution: {integrity: sha512-2zRBLvXXHszahICfxRtH/byo0tR2dvOINB6aCt25X6IMSpeMdWVqq/SLMtco4rw8SJxZhZwMioLvsGi28nETDg==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+    dependencies:
+      esbuild-wasm: 0.19.6
+      fs-extra: 11.1.1
+    dev: true
+
+  /@inlang/json-types@1.1.0(@sinclair/typebox@0.31.28):
+    resolution: {integrity: sha512-n6vS6AqETsCFbV4TdBvR/EH57waVXzKsMqeUQ+eH2Q6NUATfKhfLabgNms2A+QV3aedH/hLtb1pRmjl2ykBVZg==}
+    peerDependencies:
+      '@sinclair/typebox': ^0.31.0
+    dependencies:
+      '@sinclair/typebox': 0.31.28
+    dev: false
+
+  /@inlang/language-tag@1.4.0(@sinclair/typebox@0.31.28):
+    resolution: {integrity: sha512-IKAhzWphmdnzraUYrhAeETZYUm/O8zCKgZi3w6r/5bgRgFq1eh1ZEBfvobGGyuKsMmFdWxb9AjUG+HBIU90IHw==}
+    peerDependencies:
+      '@sinclair/typebox': ^0.31.17
+    dependencies:
+      '@sinclair/typebox': 0.31.28
+    dev: false
+
+  /@inlang/message-lint-rule@1.4.1(@sinclair/typebox@0.31.28):
+    resolution: {integrity: sha512-kwl3IXD2bjnaFBZC7jZe2xioyTqF+7V9G9RDSkzYv9bl2hC+lvjhPGZJnJ7/a8Bpp1ENdUt7CaDJ3UlcDbUjMQ==}
+    peerDependencies:
+      '@sinclair/typebox': ^0.31.17
+    dependencies:
+      '@inlang/json-types': 1.1.0(@sinclair/typebox@0.31.28)
+      '@inlang/language-tag': 1.4.0(@sinclair/typebox@0.31.28)
+      '@inlang/message': 2.0.1(@sinclair/typebox@0.31.28)
+      '@inlang/project-settings': 2.2.1(@sinclair/typebox@0.31.28)
+      '@inlang/translatable': 1.2.1(@sinclair/typebox@0.31.28)
+      '@sinclair/typebox': 0.31.28
+    dev: false
+
+  /@inlang/message@2.0.1(@sinclair/typebox@0.31.28):
+    resolution: {integrity: sha512-onsYNo9fXBNGFU1wVk3AijvrskPKjT/Kq4RtJqsx1a1ijhjbmPszDi65GdORmCSF1z7EVhoQ8py3GLlKgwBQYw==}
+    peerDependencies:
+      '@sinclair/typebox': ^0.31.17
+    dependencies:
+      '@inlang/language-tag': 1.4.0(@sinclair/typebox@0.31.28)
+      '@sinclair/typebox': 0.31.28
+    dev: false
+
+  /@inlang/module@1.2.3(@sinclair/typebox@0.31.28):
+    resolution: {integrity: sha512-LoUfIKXi6FUpvZR1DYAoEZ+uhS6Q60EtiBE/RBuoK1dKXX0QRn39HdoBt2idhdmVisgwELsuf/1IBp+Rwc3qSw==}
+    peerDependencies:
+      '@sinclair/typebox': ^0.31.17
+    dependencies:
+      '@inlang/message-lint-rule': 1.4.1(@sinclair/typebox@0.31.28)
+      '@inlang/plugin': 2.4.3(@sinclair/typebox@0.31.28)
+      '@sinclair/typebox': 0.31.28
+    dev: false
+
+  /@inlang/plugin@2.4.3(@sinclair/typebox@0.31.28):
+    resolution: {integrity: sha512-KN+V91vaoZ350b2PyU+O3Gb1SQs+osMcEbhkoluV/2HfNwgWdgj0QPmSEwq4DjlrIgutE2aY8h3RCwrhEKmbGg==}
+    peerDependencies:
+      '@sinclair/typebox': ^0.31.17
+    dependencies:
+      '@inlang/json-types': 1.1.0(@sinclair/typebox@0.31.28)
+      '@inlang/language-tag': 1.4.0(@sinclair/typebox@0.31.28)
+      '@inlang/message': 2.0.1(@sinclair/typebox@0.31.28)
+      '@inlang/project-settings': 2.2.1(@sinclair/typebox@0.31.28)
+      '@inlang/translatable': 1.2.1(@sinclair/typebox@0.31.28)
+      '@lix-js/fs': 0.6.0
+      '@sinclair/typebox': 0.31.28
+    dev: false
+
+  /@inlang/project-settings@2.2.1(@sinclair/typebox@0.31.28):
+    resolution: {integrity: sha512-cOmE1pfKoP7Gk3H2GYyiNH+u18bjqIPRW5j4Cgsww0aJ78xz/xJlE7S4Z/YYwsf4ge7uDn9brEHtBtONBdFVGg==}
+    peerDependencies:
+      '@sinclair/typebox': ^0.31.17
+    dependencies:
+      '@inlang/json-types': 1.1.0(@sinclair/typebox@0.31.28)
+      '@inlang/language-tag': 1.4.0(@sinclair/typebox@0.31.28)
+      '@sinclair/typebox': 0.31.28
+    dev: false
+
+  /@inlang/result@1.1.0:
+    resolution: {integrity: sha512-zLGroi9EUiHuOjUOaglUVTFO7EWdo2OARMJLBO1Q5Ga/xJmSQb6XS1lhqEXBFAjgFarfEMX5YEJWWALogYV3wA==}
+    dev: false
+
+  /@inlang/sdk@0.24.1:
+    resolution: {integrity: sha512-FkMXuUQ3AFeB0pV/kemuVdGon+Kcw1393TmBhzbU0tf3ZxEJfvdCUI+CfR/IF7ricIcgLCWfCZeaaLd2nFTszQ==}
+    engines: {node: '>=18.0.0'}
+    dependencies:
+      '@inlang/json-types': 1.1.0(@sinclair/typebox@0.31.28)
+      '@inlang/language-tag': 1.4.0(@sinclair/typebox@0.31.28)
+      '@inlang/message': 2.0.1(@sinclair/typebox@0.31.28)
+      '@inlang/message-lint-rule': 1.4.1(@sinclair/typebox@0.31.28)
+      '@inlang/module': 1.2.3(@sinclair/typebox@0.31.28)
+      '@inlang/plugin': 2.4.3(@sinclair/typebox@0.31.28)
+      '@inlang/project-settings': 2.2.1(@sinclair/typebox@0.31.28)
+      '@inlang/result': 1.1.0
+      '@inlang/translatable': 1.2.1(@sinclair/typebox@0.31.28)
+      '@lix-js/client': 0.7.0
+      '@lix-js/fs': 0.6.0
+      '@sinclair/typebox': 0.31.28
+      dedent: 1.5.1
+      deepmerge-ts: 5.1.0
+      solid-js: 1.6.12
+      throttle-debounce: 5.0.0
+    transitivePeerDependencies:
+      - babel-plugin-macros
+    dev: false
+
+  /@inlang/translatable@1.2.1(@sinclair/typebox@0.31.28):
+    resolution: {integrity: sha512-U1Rg283x3kUfDqHIS3kYu14QHbxIC3N6olJHOwpnFm88WRGjikz6h4iHlEEmvMJ3Kp3ianzplFoWH43Ago2muw==}
+    peerDependencies:
+      '@sinclair/typebox': ^0.31.17
+    dependencies:
+      '@inlang/language-tag': 1.4.0(@sinclair/typebox@0.31.28)
+      '@sinclair/typebox': 0.31.28
+    dev: false
+
   /@isaacs/cliui@8.0.2:
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
     engines: {node: '>=12'}
@@ -6270,6 +6391,20 @@ packages:
     resolution: {integrity: sha512-QuTgnG52Poic7uM1AN5yJ09QMe0O28e10XzSvWDz02TJiiKee4stsiownEIadWm8nYzyDAyT+gKzUoZmiWQtsQ==}
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.1.2
+    dev: false
+
+  /@lix-js/client@0.7.0:
+    resolution: {integrity: sha512-x3QjLdeFgBAej5ZIkgonC1f/BfYNmVY/Slx0+26OZKlrFFunCrbRpx5ZoXS4n5GPWtxPEVjNLpN7yovF5C+9RQ==}
+    dependencies:
+      '@lix-js/fs': 0.6.0
+      '@octokit/types': 12.4.0
+      isomorphic-git: 1.24.5
+      octokit: 3.1.2
+      solid-js: 1.7.11
+    dev: false
+
+  /@lix-js/fs@0.6.0:
+    resolution: {integrity: sha512-sSd1ZOcWOMvekFo0dFn/wP7SgEf9s6xjUBQBfl1NGDnFhcsGxLdqw7KPQhx662icQoz9GKfM4Xp3Xfa+y6TXAQ==}
     dev: false
 
   /@ljharb/through@2.3.11:
@@ -12458,7 +12593,6 @@ packages:
   /esbuild-wasm@0.19.6:
     resolution: {integrity: sha512-PmjQeQlCXjN5ILhu1tOLkDc7Mqyxw0M2x9lRMi4VwLoVKnfbANieH5pRwhszkBg64LkM/GUiZZNsME4mfTigwA==}
     engines: {node: '>=12'}
-    dev: false
 
   /esbuild@0.17.19:
     resolution: {integrity: sha512-XQ0jAPFkK/u3LcVRcvVHQcTIqD6E2H1fvZMA5dQPSOWb3suUbWbfbRf94pjc0bNzRYLfIrDRQXr7X+LHIm5oHw==}
@@ -13900,7 +14034,6 @@ packages:
       graceful-fs: 4.2.11
       jsonfile: 6.1.0
       universalify: 2.0.1
-    dev: true
 
   /fs-extra@7.0.1:
     resolution: {integrity: sha512-YJDaCJZEnBmcbw13fvdAM9AwNOJwOzrE4pqMqBq5nFiEqXUqHwlK4B+3pUw6JNvfSPtX05xFHtYy/1ni01eGCw==}
@@ -16126,10 +16259,12 @@ packages:
 
   /loglevel-plugin-prefix@0.8.4:
     resolution: {integrity: sha512-WpG9CcFAOjz/FtNht+QJeGpvVl/cdR6P0z6OcXSkr8wFJOsV2GRj2j10JLfjuA4aYkcKCNIEqRGCyTife9R8/g==}
+    requiresBuild: true
 
   /loglevel@1.8.1:
     resolution: {integrity: sha512-tCRIJM51SHjAayKwC+QAg8hT8vg6z7GSgLJKGvzuPb1Wc+hLzqtuVLxp6/HzSPOozuK+8ErAhy7U/sVzw8Dgfg==}
     engines: {node: '>= 0.6.0'}
+    requiresBuild: true
 
   /longest-streak@3.1.0:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
@@ -22583,7 +22718,7 @@ packages:
       '@rollup/pluginutils': 5.0.5(rollup@3.29.1)
       debug: 4.3.4(supports-color@8.1.1)
       error-stack-parser-es: 0.1.1
-      fs-extra: 11.1.1
+      fs-extra: 11.2.0
       open: 9.1.0
       picocolors: 1.0.0
       sirv: 2.0.4

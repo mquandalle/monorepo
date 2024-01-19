@@ -6,4 +6,4 @@
  * @returns A unique identifier for the given original name
  */
 export const identifier = (context: string) => (original_name: string) =>
-	`paraglide_740127592_${context}_${original_name}`
+	`paraglide_${context}_${original_name}`

@@ -3,7 +3,13 @@ import { Message, ProjectSettings, loadProject, type InlangProject } from "@inla
 import { openRepository, findRepoRoot } from "@lix-js/client"
 import path from "node:path"
 import fs from "node:fs/promises"
-import { compile, writeOutput, Logger } from "@inlang/paraglide-js/internal"
+import {
+	compile,
+	writeOutput,
+	Logger,
+	type Adapter,
+	getAdapterFiles,
+} from "@inlang/paraglide-js/internal"
 import crypto from "node:crypto"
 
 const PLUGIN_NAME = "unplugin-paraglide"
@@ -12,12 +18,7 @@ export type UserConfig = {
 	project: string
 	outdir: string
 	silent?: boolean
-
-	/**
-	 * Any extra files to be written to the output directory.
-	 * This is usually only used by Inlang's own adapters.
-	 */
-	extraFiles?: Record<string, string>
+	adapter?: Adapter
 }
 
 export const paraglide = createUnplugin((config: UserConfig) => {
@@ -45,7 +46,9 @@ export const paraglide = createUnplugin((config: UserConfig) => {
 		}
 
 		logMessageChange()
-		const output = compile({ messages, settings, extraFiles: options.extraFiles })
+
+		const adapterFiles = options.adapter ? await getAdapterFiles(options.adapter) : {}
+		const output = compile({ messages, settings, extraFiles: adapterFiles })
 		await writeOutput(outputDirectory, output, fs)
 		numCompiles++
 		previousMessagesHash = currentMessagesHash

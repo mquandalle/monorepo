@@ -7,6 +7,7 @@ import { writeOutput } from "../../services/file-handling/write-output.js"
 import { Logger } from "../../services/logger/index.js"
 import { openRepository, findRepoRoot } from "@lix-js/client"
 import type { NodeishFilesystem } from "@lix-js/fs"
+import { getAdapterFiles, isKnownAdapter, type Adapter } from "../../services/adapter/registry.js"
 
 export const compileCommand = new Command()
 	.name("compile")
@@ -18,59 +19,77 @@ export const compileCommand = new Command()
 		"./src/paraglide"
 	)
 	.requiredOption("--watch", "Watch for changes and recompile.", false)
-	.action(async (options: { project: string; outdir: string; watch: boolean }) => {
-		const logger = new Logger({ silent: false, prefix: true })
-		const path = resolve(process.cwd(), options.project)
-		const outputDirectory = resolve(process.cwd(), options.outdir)
+	.option("--adapter <name>", "The adapter to use. Example: sveltekit", undefined)
+	.action(
+		async (options: { project: string; outdir: string; watch: boolean; adapter?: string }) => {
+			const logger = new Logger({ silent: false, prefix: true })
+			const path = resolve(process.cwd(), options.project)
+			const outputDirectory = resolve(process.cwd(), options.outdir)
 
-		logger.info(`Compiling inlang project at "${options.project}".`)
-
-		const repoRoot = await findRepoRoot({ nodeishFs: nodeFsPromises, path })
-		const repo = await openRepository(repoRoot || process.cwd(), {
-			nodeishFs: nodeFsPromises,
-		})
-
-		if (!repoRoot) {
-			logger.warn(`Could not find repository root for path ${path}`)
-		}
-
-		const project = exitIfErrors(
-			await loadProject({
-				projectPath: path,
-				repo,
-				appId: "library.inlang.paraglideJs",
-			}),
-			logger
-		)
-
-		await executeCompilation(project, outputDirectory, repo.nodeishFs)
-
-		if (options.watch) {
-			process.on("SIGINT", () => {
-				//start with a new line, since the ^C is on the current line
-				logger.ln().info("Stopping the watcher.")
-				process.exit(0)
-			})
-
-			let numChanges = 0
-			project.query.messages.getAll.subscribe(async (messages) => {
-				numChanges++
-				if (messages.length === 0) return //messages probably haven't loaded yet
-				if (numChanges === 1) return //don't recompile on the first run
-
-				logger.info("Messages changed. Recompiling...")
-				await executeCompilation(project, outputDirectory, repo.nodeishFs)
-			})
-
-			/* eslint-disable no-constant-condition */
-			while (true) {
-				// Keep the process alive
-				await new Promise((resolve) => setTimeout(resolve, 10_000))
+			const adapter = options.adapter as Adapter | undefined
+			if (adapter && !isKnownAdapter(adapter)) {
+				logger.error(`Unknown adapter "${adapter}"`)
+				process.exit(1)
 			}
-		}
 
-		logger.info("Sucessfully compiled the project.")
-	})
+			logger.info(`Compiling inlang project at "${options.project}".`)
+
+			const repoRoot = await findRepoRoot({ nodeishFs: nodeFsPromises, path })
+			const repo = await openRepository(repoRoot || process.cwd(), {
+				nodeishFs: nodeFsPromises,
+			})
+
+			if (!repoRoot) {
+				logger.warn(`Could not find repository root for path ${path}`)
+			}
+
+			const project = exitIfErrors(
+				await loadProject({
+					projectPath: path,
+					repo,
+					appId: "library.inlang.paraglideJs",
+				}),
+				logger
+			)
+
+			let adapterFiles: Record<string, string> = {}
+			try {
+				adapterFiles = adapter ? await getAdapterFiles(adapter) : {}
+			} catch (e) {
+				logger.error(`Failed to load adapter files for adapter "${adapter}"`)
+				console.error(e)
+				process.exit(1)
+			}
+
+			await executeCompilation(project, outputDirectory, adapterFiles, repo.nodeishFs)
+
+			if (options.watch) {
+				process.on("SIGINT", () => {
+					//start with a new line, since the ^C is on the current line
+					logger.ln().info("Stopping the watcher.")
+					process.exit(0)
+				})
+
+				let numChanges = 0
+				project.query.messages.getAll.subscribe(async (messages) => {
+					numChanges++
+					if (messages.length === 0) return //messages probably haven't loaded yet
+					if (numChanges === 1) return //don't recompile on the first run
+
+					logger.info("Messages changed. Recompiling...")
+					await executeCompilation(project, outputDirectory, adapterFiles, repo.nodeishFs)
+				})
+
+				/* eslint-disable no-constant-condition */
+				while (true) {
+					// Keep the process alive
+					await new Promise((resolve) => setTimeout(resolve, 10_000))
+				}
+			}
+
+			logger.info("Sucessfully compiled the project.")
+		}
+	)
 
 /**
  * Reads the messages from the project and compiles them into the output directory.
@@ -78,11 +97,13 @@ export const compileCommand = new Command()
 async function executeCompilation(
 	project: InlangProject,
 	outputDirectory: string,
+	extraFiles: Record<string, string>,
 	fs: NodeishFilesystem
 ) {
 	const output = compile({
 		messages: project.query.messages.getAll(),
 		settings: project.settings(),
+		extraFiles,
 	})
 
 	await writeOutput(outputDirectory, output, fs)

@@ -45,7 +45,11 @@ const __dirname = pathPolyfill123.dirname(__filename)
 	},
 
 	//Don't bundle any explicit dependencies, only devDependencies
-	external: [...Object.keys(packageJson.dependencies || {})],
+	external: [
+		...Object.keys(packageJson.dependencies || {}),
+		...Object.keys(packageJson.peerDependencies || {}),
+		"@inlang/paraglide-js-adapter-sveltekit",
+	],
 })
 
 if (isProduction === false) {
