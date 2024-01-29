@@ -73,7 +73,8 @@ test.runIf(process.env.GOOGLE_TRANSLATE_API_KEY)(
 				}
 			}
 		}
-	}
+	},
+	10000 // 10 seconds - see setTimeout in translate.ts
 )
 
 test.runIf(process.env.GOOGLE_TRANSLATE_API_KEY)(
@@ -150,5 +151,6 @@ test.runIf(process.env.GOOGLE_TRANSLATE_API_KEY)(
 				(value) => value.type === "VariableReference" && value.name === "username"
 			)
 		).toBeTruthy()
-	}
+	},
+	10000 // 10 seconds - see setTimeout in translate.ts
 )
