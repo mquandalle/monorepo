@@ -2,6 +2,16 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "paraglide vite-adapter example-nuxt dev",
+			"program": "./node_modules/nuxt/bin/nuxt.mjs",
+			"args": ["dev"],
+			"request": "launch",
+			"skipFiles": ["<node_internals>/**"],
+			"type": "node",
+			"cwd": "${workspaceFolder}/inlang/source-code/paraglide/paraglide-js-adapter-vite/example-nuxt/",
+			"console": "integratedTerminal"
+		},
+		{
 			"name": "debug current vitest",
 			"type": "node",
 			"request": "launch",
