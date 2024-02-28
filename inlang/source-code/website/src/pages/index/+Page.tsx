@@ -11,6 +11,7 @@ import LixSection from "./custom_section/Lix/index.jsx"
 import Features from "./custom_section/Features.jsx"
 
 export default function Page() {
+	const projectCount = currentPageContext.data.projectCount
 	return (
 		<>
 			<Title>{m.inlang_global_title()}</Title>
@@ -46,7 +47,7 @@ export default function Page() {
 				rel="canonical"
 			/>
 			<MarketplaceLayout>
-				<HeroSearch />
+				<HeroSearch projectCount={projectCount} />
 				<Features />
 				<Personas />
 				{/* <ExtendSection /> */}
