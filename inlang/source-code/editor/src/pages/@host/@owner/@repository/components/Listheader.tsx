@@ -53,7 +53,7 @@ export const ListHeader = () => {
 	return (
 		<div class="w-full bg-background border border-surface-3 rounded-t-md flex flex-wrap items-center justify-between gap-2 p-4 animate-blendIn z-[1] relative">
 			<div class="font-medium text-on-surface">{messageCount() + " Messages"}</div>
-			{(messageCount() > 0 && !import.meta.env.PROD && console.timeLog("openRepository")) || ""}
+			{(!import.meta.env.PROD && messageCount() > 0 && console.timeLog("openRepository")) || ""}
 			<div class="flex flex-wrap gap-2">
 				<For each={Object.keys(getLintSummary()) as MessageLintRule["id"][]}>
 					{(lintRule) => (
