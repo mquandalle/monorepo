@@ -638,7 +638,7 @@ export async function pushChanges(args: {
 		})
 	}
 
-	// triggerin g a side effect here to trigger a re-render
+	// triggering a side effect here to trigger a re-render
 	// of components that depends on fs
 	args.setFsChange(new Date())
 	// push changes
